@@ -13,11 +13,10 @@ try:
     length=int(os.getenv('CONTENT_LENGTH', 0))
 
     data = sys.stdin.read(length)
-    data='this is sample'
+    #data='this is sample'
     response = {'data':str(data)}
-    postdata=str(data)
-    response = {'data':str(postdata)}
-    conn = sqlite3.connect("bus.sqlite")
+    postdata=str(data)    
+    conn = sqlite3.connect("/home/pi/bus.sqlite")
     cursor = conn.cursor()
 
     s="INSERT INTO postdata (data) VALUES ('"+str(postdata)+"');"
@@ -25,6 +24,8 @@ try:
     cursor.execute(s)
    # cursor.close()
     conn.commit()
+	
+	response = {'data':str(postdata),'result':'true'}
 
 except Exception, e:
     response = {'error': str(e)}
