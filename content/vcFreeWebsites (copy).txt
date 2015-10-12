@@ -1,0 +1,11 @@
+mobile-collector.newrelic.com
+track.appsflyer.com
+android.clients.google.com
+www.googleapis.com
+accounts.google.com
+device-api.urbanairship.com
+app.konotor.com
+combine.urbanairship.com
+vuclipplusbackend.vuclip.com
+appbackend1.vuclip.com
+appbackend2.vuclip.com
