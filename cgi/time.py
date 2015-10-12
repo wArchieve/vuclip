@@ -1,9 +1,8 @@
-__author__ = 'pp'
-#!/usr/bin/python -w
+#!/usr/bin/python
 import xml.etree.cElementTree as ET
 import time
 
-print "Content-type:text/xml"
+print "Content-type:text/xml \n\n"
 
 time=int(time.time())
 
