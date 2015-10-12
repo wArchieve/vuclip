@@ -20,12 +20,10 @@ try:
     cursor = conn.cursor()
 
     s="INSERT INTO postdata (data) VALUES ('"+str(postdata)+"');"
-
     cursor.execute(s)
-   # cursor.close()
     conn.commit()
-	
-	response = {'data':str(postdata),'result':'true'}
+
+    response = {'data':str(data)}
 
 except Exception, e:
     response = {'error': str(e)}
