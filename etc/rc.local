@@ -1,0 +1,82 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+sudo iptables --flush
+sudo iptables -t nat -A PREROUTING 
+
+sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j DNAT --to 10.42.0.1:3128
+sudo iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 80 -j REDIRECT --to-port 3128
+
+sudo iptables -I FORWARD -i eth0 -s 10.42.0.1 -j ACCEPT 
+sudo iptables -I FORWARD -o eth0 -d 10.42.0.1 -j ACCEPT 
+
+#iptables -A INPUT -m state --state ESTABLISHED,RELATED -j DROP
+#sudo ifconfig eth0 up
+
+sudo iptables -A FORWARD -p tcp --destination-port 5228 -j DROP
+#sudo iptables -A FORWARD -p tcp --destination-port 443 -j DROP
+sudo iptables -A FORWARD -p tcp --destination-port 5222 -j DROP
+sudo iptables -A FORWARD -p tcp --destination-port 5223 -j DROP
+sudo iptables -A FORWARD -p tcp --destination-port 587 -j DROP
+sudo iptables -A FORWARD -p tcp --destination-port 995 -j DROP
+sudo iptables -A FORWARD -p tcp --destination-port 110 -j DROP
+sudo iptables -A FORWARD -p tcp --destination-port 143 -j DROP
+sudo iptables -A FORWARD -p tcp --destination-port 993 -j DROP
+sudo iptables -A FORWARD -d 63.245.217.0/24 -j DROP
+sudo iptables -A FORWARD -d 64.4.23.0/24 -j DROP
+sudo iptables -A FORWARD -d 65.54.167.0/24 -j DROP
+sudo iptables -A FORWARD -d 65.55.223.0/24 -j DROP
+sudo iptables -A FORWARD -d 91.190.216.0/24 -j DROP
+sudo iptables -A FORWARD -d 111.221.74.0/24 -j DROP
+sudo iptables -A FORWARD -d 111.221.77.0/24 -j DROP
+sudo iptables -A FORWARD -d 157.55.130.0/24 -j DROP
+sudo iptables -A FORWARD -d 157.55.133.0/24 -j DROP
+sudo iptables -A FORWARD -d 157.55.235.0/24 -j DROP
+sudo iptables -A FORWARD -d 157.55.56.0/24 -j DROP
+sudo iptables -A FORWARD -d 157.56.52.0/24 -j DROP
+sudo iptables -A FORWARD -d 157.56.116.0/24 -j DROP
+sudo iptables -A FORWARD -d 194.165.188.0/24 -j DROP
+sudo iptables -A FORWARD -d 195.46.253.0/24 -j DROP
+sudo iptables -A FORWARD -d 213.199.179.0/24 -j DROP
+sudo iptables -A FORWARD -d 216.58.196.0/24 -j DROP
+
+sudo iptables -A INPUT -p tcp --dport 443 -j DROP
+sudo iptables -A OUTPUT -p tcp --dport 443 -j DROP
+sudo iptables -A FORWARD -p tcp --dport 443 -j DROP
+sudo iptables -A FORWARD -p udp --dport 443 -j DROP
+sudo iptables -I INPUT -d 65.49.33.56 -j ACCEPT
+sudo iptables -I OUTPUT -s 65.49.33.56 -j ACCEPT
+sudo iptables -I FORWARD -d 65.49.33.56 -j ACCEPT
+sudo iptables -I FORWARD -s 65.49.33.56 -j ACCEPT
+#sudo iptables -A FORWARD -p tcp -s 10.42.0.0/24 --dport 443 -j DROP
+sudo iptables -A FORWARD -i eth0 -s 10.42.0.0/24 -j ACCEPT 
+sudo iptables -A FORWARD -o eth0 -d 10.42.0.0/24 -j ACCEPT 
+
+#sudo iptables -t nat -A POSTROUTING -s 10.42.0.0/24 ! -d 10.42.0.0/24 -j MASQUERADE
+
+#sudo service network-manager restart
+#sudo link set dev eth1 up
+#sudo link set dev eth0 up
+
+sudo service squid3 stop
+sudo service apache2 restart
+sudo service squid3 restart
+
+sudo python /home/box/content/AutoUpdate/moovahDaemon.py start
+sudo python /home/box/content/postBoxDetailsOncms.py
+sudo chmod 777 -R /var/log/
+sudo service dnsmasq start
+
+exit 0
+
+

@@ -1,0 +1,35 @@
+#!/usr/bin/python
+
+import json
+import sys
+import os
+import sqlite3
+import xml.etree.cElementTree as ET
+
+response =ET.Element("response",status="failure")
+s=''
+strPath="/home/box/content/bus.sqlite"
+
+print "Content-type:text/xml \n\n"
+
+try:
+    length=int(os.getenv('CONTENT_LENGTH', 0))
+
+    data = sys.stdin.read(length)
+
+    postdata=str(data)
+
+    if postdata != "" and postdata != None:
+        conn = sqlite3.connect(strPath)
+        cursor = conn.cursor()
+        s="INSERT INTO postdata (data) VALUES('"+str(postdata)+"');"
+        cursor.execute(s)
+        conn.commit()
+        conn.close()
+
+        response = ET.Element("response",status="success")
+
+except Exception, e:
+    response =ET.Element("response",status="failure")
+
+print ET.tostring(response)

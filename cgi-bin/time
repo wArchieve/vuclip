@@ -1,0 +1,12 @@
+#!/usr/bin/python
+import xml.etree.cElementTree as ET
+import time
+
+print "Content-type:application/xml\n"
+print '<?xml version="1.0" encoding="UTF-8"?>'
+time=int(time.time())
+
+response = ET.Element("response",status="success")
+ET.SubElement(response,"avp",a="currtime").text= str(time)
+tree = ET.ElementTree(response)
+print ET.tostring(response)
